@@ -14,7 +14,7 @@ DELIMITER //
 CREATE TRIGGER tgr_cartaodecredito_Insert_Bf BEFORE INSERT ON cartaodecredito
 FOR EACH ROW
 BEGIN
-	SET NEW.MesAnoVencimento = DATE_FORMAT(NEW.DataVencimento, "%y/%m");
+	SET NEW.AnoMesVencimento = DATE_FORMAT(NEW.DataVencimento, "%y/%m");
 END //
 DELIMITER ;
 
@@ -47,5 +47,15 @@ CREATE TRIGGER tgr_Numerocartaodecredito_Insert_Bf BEFORE INSERT ON cartaodecred
 FOR EACH ROW
 BEGIN
 	SET NEW.Bandeira = BandeiraDoCartao(NEW.Numero);
+END //
+DELIMITER ;
+
+-- TRIGGER 6
+-- Insere a hora atual no campo "Data" da tabela publicacoes
+DELIMITER //
+CREATE TRIGGER tgr_publicacoes_Insert_Bf BEFORE INSERT ON publicacoes
+FOR EACH ROW
+BEGIN
+	SET NEW.`Data` = NOW();
 END //
 DELIMITER ;
