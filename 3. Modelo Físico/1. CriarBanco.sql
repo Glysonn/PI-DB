@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `IgrejaBD`.`Usuarios` (
   `Email` VARCHAR(45) NOT NULL,
   `Telefone` VARCHAR(14) NOT NULL,
   `HashSenha` CHAR(87) NOT NULL,
-  `NomeCompleto` VARCHAR(255) NULL,
+  `NomeCompleto` TEXT NULL,
   PRIMARY KEY (`CPF`),
   UNIQUE INDEX `CPF_UNIQUE` (`CPF` ASC) VISIBLE,
   UNIQUE INDEX `Email_UNIQUE` (`Email` ASC) VISIBLE,
@@ -52,9 +52,9 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `IgrejaBD`.`Publicacoes` (
   `ID` INT NOT NULL AUTO_INCREMENT,
   `Administradores_Usuario_CPF` VARCHAR(14) NOT NULL,
-  `Data` DATETIME NOT NULL,
   `Legenda` TEXT NOT NULL,
   `Imagem` LONGBLOB NOT NULL,
+  `Data` DATETIME NULL,
   PRIMARY KEY (`ID`),
   UNIQUE INDEX `ID_UNIQUE` (`ID` ASC) VISIBLE,
   INDEX `fk_Publicacoes_Administradores1_idx` (`Administradores_Usuario_CPF` ASC) VISIBLE,
@@ -73,26 +73,27 @@ CREATE TABLE IF NOT EXISTS `IgrejaBD`.`CartaoDeCredito` (
   `Numero` VARCHAR(19) NOT NULL,
   `CVV` SMALLINT NOT NULL,
   `DataVencimento` DATE NOT NULL,
-  `MesAnoVencimento` CHAR(5) NULL,
+  `AnoMesVencimento` CHAR(5) NULL,
+  `Bandeira` VARCHAR(45) NULL,
   PRIMARY KEY (`Numero`),
   UNIQUE INDEX `Numero_UNIQUE` (`Numero` ASC) VISIBLE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `IgrejaBD`.`CartaoCreditoUsuarios`
+-- Table `IgrejaBD`.`Usuarios_CartaoDeCredito`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `IgrejaBD`.`CartaoCreditoUsuarios` (
+CREATE TABLE IF NOT EXISTS `IgrejaBD`.`Usuarios_CartaoDeCredito` (
   `Usuarios_CPF` VARCHAR(14) NOT NULL,
-  `CartaoDeCredito_Numero` VARCHAR(16) NOT NULL,
+  `CartaoDeCredito_Numero` VARCHAR(19) NOT NULL,
   PRIMARY KEY (`Usuarios_CPF`, `CartaoDeCredito_Numero`),
-  INDEX `fk_CartaoCreditoUsuarios_CartaoDeCredito1_idx` (`CartaoDeCredito_Numero` ASC) VISIBLE,
+  INDEX `fk_Usuarios_CartaoDeCredito_CartaoDeCredito1_idx` (`CartaoDeCredito_Numero` ASC) VISIBLE,
   CONSTRAINT `fk_CartaoCreditoUsuarios_Usuarios1`
     FOREIGN KEY (`Usuarios_CPF`)
     REFERENCES `IgrejaBD`.`Usuarios` (`CPF`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_CartaoCreditoUsuarios_CartaoDeCredito1`
+  CONSTRAINT `fk_Usuarios_CartaoDeCredito_CartaoDeCredito1`
     FOREIGN KEY (`CartaoDeCredito_Numero`)
     REFERENCES `IgrejaBD`.`CartaoDeCredito` (`Numero`)
     ON DELETE NO ACTION
@@ -119,40 +120,20 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `IgrejaBD`.`TipoPagamentos`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `IgrejaBD`.`TipoPagamentos` (
-  `ID` INT NOT NULL AUTO_INCREMENT,
-  `Tipo` ENUM('Cartao', 'Pix', 'Boleto') NOT NULL,
-  `Parcelas` TINYINT NULL,
-  PRIMARY KEY (`ID`),
-  UNIQUE INDEX `ID_UNIQUE` (`ID` ASC) VISIBLE)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `IgrejaBD`.`Pagamentos`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `IgrejaBD`.`Pagamentos` (
-  `ID` INT NOT NULL AUTO_INCREMENT,
-  `Doacoes_ID` INT NOT NULL,
-  `TipoPagamentos_ID` INT NOT NULL,
+  `Doacoes_ID` INT NOT NULL AUTO_INCREMENT,
   `Valor` DECIMAL(6,2) NOT NULL,
   `DataPagamento` DATETIME NOT NULL,
-  PRIMARY KEY (`ID`),
-  UNIQUE INDEX `ID_UNIQUE` (`ID` ASC) VISIBLE,
-  INDEX `fk_Pagamentos_Doacoes1_idx` (`Doacoes_ID` ASC) VISIBLE,
-  INDEX `fk_Pagamentos_TipoPagamentos1_idx` (`TipoPagamentos_ID` ASC) VISIBLE,
+  `Tipo` ENUM('Cartao', 'Pix', 'Boleto') NOT NULL,
+  `Parcelas` TINYINT NULL,
+  PRIMARY KEY (`Doacoes_ID`),
   CONSTRAINT `fk_Pagamentos_Doacoes1`
     FOREIGN KEY (`Doacoes_ID`)
     REFERENCES `IgrejaBD`.`Doacoes` (`ID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Pagamentos_TipoPagamentos1`
-    FOREIGN KEY (`TipoPagamentos_ID`)
-    REFERENCES `IgrejaBD`.`TipoPagamentos` (`ID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
