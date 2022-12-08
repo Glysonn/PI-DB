@@ -73,6 +73,7 @@ CREATE TABLE IF NOT EXISTS `IgrejaBD`.`CartaoDeCredito` (
   `Numero` VARCHAR(19) NOT NULL,
   `CVV` SMALLINT NOT NULL,
   `DataVencimento` DATE NOT NULL,
+  `NomeTitular` VARCHAR(255) NOT NULL,
   `AnoMesVencimento` CHAR(5) NULL,
   `Bandeira` VARCHAR(45) NULL,
   PRIMARY KEY (`Numero`),
