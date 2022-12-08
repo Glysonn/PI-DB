@@ -11,6 +11,3 @@ VALUES ('123.456.789-00','4389 3514 7562 8012'),
 ('021.131.621-05','5417 6687 5181 4070'),
 ('376.365.854-80','5576 3284 5336 4547'),
 ('514.698.984-20','6011 2329 1152 1816');
-
-SELECT CartaoDeCredito_Numero "Cartão de crédito", u.Nome FROM usuarios_cartaodecredito ucc
-inner join usuarios u on u.CPF = ucc.Usuarios_CPF GROUP BY CartaoDeCredito_Numero having count(CartaoDeCredito_Numero) > 1;
