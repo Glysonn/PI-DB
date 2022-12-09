@@ -1,4 +1,4 @@
-INSERT INTO usuarios (`CPF`,`Nome`,`Sobrenome`,`Email`,`Telefone`,`HashSenha`,`NomeCompleto`)
+INSERT INTO usuarios (`CPF`,`Nome`,`Sobrenome`,`Email`,`Telefone`,`Senha`,`NomeCompleto`)
 VALUES ('003.401.585-06','FERNANDA','CASTRO MONTEIRO','fcastromonte@yahoo.com.br','(11) 98203-8087','$pbkdf2-sha256$50000$kjImBICQkjLGeK91bu1daw$oSiiMnMzDYWGX5wNhBX9sw1Cr1lZ6FAqXpkQiQbwzes',NULL),
 ('812.135.137-82','JOAO','GOMES REIS','JgomesR@gmail.com','(11) 97273-8374','$pbkdf2-sha256$50000$R2gtBeBci/G.NyakNIZwjg$q82.IZ9.al0V1r4qUZSie5bGTX1.8TxZx/Y7iNNjO0U',NULL),
 ('021.131.621-05','MARIA CLARA','NASCIMENTO CARDOSO','mcncardoso1202@hotmail.com','(11) 90117-7716','$pbkdf2-sha256$50000$C4FQ6p0TAgBAaA2htPZe6w$I53IYAbhxb.TFTni4vSUfgij8upD6dvn0VFkCzWWK/o',NULL),
