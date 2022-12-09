@@ -1,32 +1,28 @@
--- PROCEDURE 1 -----------------------------------------------------
+-- 1
 DELIMITER //
 CREATE PROCEDURE BuscarUsuario (IN Email VARCHAR(45), IN Senha CHAR(87))
 BEGIN
 	SELECT * FROM Usuarios U WHERE U.Email = Email AND U.Senha = Senha;
 END //
 DELIMITER ;
--- ---------------------------------------------------
 
--- PROCEDURE 2
+-- 2
 DELIMITER //
 CREATE PROCEDURE AdicionarUsuario (IN CPF VARCHAR(14), IN Nome VARCHAR(255), IN Sobrenome VARCHAR(255), IN Email VARCHAR(45), IN Telefone VARCHAR(14), IN Senha CHAR(87))
 BEGIN
 	INSERT INTO Usuarios VALUES (CPF, Nome, Sobrenome, Email, Telefone, Senha, NULL);
 END //
 DELIMITER ;
--- -----------------------------------------------------
 
--- PROCEDURE 3
+-- 3
 DELIMITER //
 CREATE PROCEDURE BuscarSenhaPorEmail (IN Email VARCHAR(45))
 BEGIN
 	SELECT Senha FROM Usuarios U WHERE U.Email = Email;
 END // 
 DELIMITER ;
--- ---------------------------------------------------
 
--- FUNCTION 1
--- RETORNA A BANDEIRA DO CARTÃO DE CRÉDITO A PARTIR DE SEU NÚMERO
+-- 4
 DELIMITER //
 CREATE FUNCTION BandeiraDoCartao(NumeroCartao VARCHAR(19)) RETURNS VARCHAR(45) DETERMINISTIC
 BEGIN
@@ -43,3 +39,15 @@ BEGIN
   RETURN Bandeira;
 END //
 DELIMITER ;
+
+-- 5
+DELIMITER //
+CREATE PROCEDURE FazerDoacao (IN CPF VARCHAR(14), IN Valor DECIMAL (6,2), IN Tipo ENUM('Cartao', 'Pix', 'Boleto'), IN Parcelas TINYINT)
+BEGIN
+	SELECT CASE WHEN Tipo != "Cartao" THEN NULL END INTO Parcelas;
+	INSERT INTO doacoes VALUES (NULL, CPF, NULL);
+    INSERT INTO pagamentos VALUES (last_insert_id(), Valor, NULL, Tipo, NULL);
+END // 
+DELIMITER ;
+
+-- 
