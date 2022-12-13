@@ -48,3 +48,21 @@ SELECT u.CPF, u.NomeCompleto "Nome Completo", u.Email, u.Telefone FROM usuarios_
     RIGHT JOIN usuarios u on u.CPF = ucc.Usuarios_CPF
 		WHERE cc.Numero IS NULL
 			ORDER BY Nome;
+
+-- Query 9: Lista de todas as doações que foram realizadas no mês de dezembro de 2022
+SELECT u.NomeCompleto, p.Valor "Valor (R$)", p.DataPagamento, p.Tipo FROM pagamentos p
+	INNER JOIN doacoes d ON d.ID = p.Doacoes_ID
+	INNER JOIN usuarios u ON u.CPF = d.Usuarios_CPF
+		WHERE MONTH(d.`Data`) = "12" AND YEAR(d.`Data`) = "2022"
+			ORDER BY p.Valor DESC;
+            
+-- Query 10: Lista das pessoas que fizeram doações cujo o valor é ABAIXO da média retornando Nome completo da pessoa, o CPF dela, o valor, o tipo de pagamento e a quantidade de parcelas (caso não haja o tipo de pagamento cartão, não retornar essa coluna)
+SELECT u.NomeCompleto, SUM(p.Valor), p.Tipo,
+CASE WHEN p.Tipo = "Cartao" THEN p.Parcelas END "Parcelas"
+FROM doacoes d
+	INNER JOIN usuarios u ON u.CPF = d.Usuarios_CPF
+	INNER JOIN pagamentos p ON p.Doacoes_ID = d.ID
+        GROUP BY u.CPF HAVING (SELECT SUM(VALOR)) < (SELECT AVG(Valor) FROM pagamentos)
+			ORDER BY u.NomeCompleto ASC, p.Valor;
+            
+-- Query 11: 
