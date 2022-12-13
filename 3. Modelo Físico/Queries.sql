@@ -1,10 +1,10 @@
--- Query 1: LISTA DE TODAS AS DOAÇÕES MOSTRANDO NOME, VALOR, DATA E O TIPO DO PAGAMENTO ORDENADOS PELO VALOR
+-- Query 1: Listar a lista de todas as doações.
 SELECT u.Nome, p.Valor, p.DataPagamento, p.Tipo FROM pagamentos p
 	INNER JOIN doacoes d ON d.ID = p.Doacoes_ID
 	INNER JOIN usuarios u ON u.CPF = d.Usuarios_CPF
 		ORDER BY p.Valor DESC;
 
--- Query 2: O valor total em pagamentos do ano 2022
+-- Query 2: Listar o valor total em pagamentos do ano 2022
 SELECT YEAR(d.`Data`) "Ano", SUM(p.Valor) "Valor Total (R$)" FROM pagamentos p
 	INNER JOIN doacoes d ON d.ID = p.Doacoes_ID
 	INNER JOIN usuarios u ON u.CPF = d.Usuarios_CPF
@@ -12,7 +12,7 @@ SELECT YEAR(d.`Data`) "Ano", SUM(p.Valor) "Valor Total (R$)" FROM pagamentos p
 			GROUP BY YEAR(p.`DataPagamento`)
 				ORDER BY p.`DataPagamento` ASC;
 
--- Query 3: O valor total em pagamentos de cada mês do ano 2022
+-- Query 3: Mostrar o valor total em pagamentos de cada mês do ano 2022
 SELECT CONCAT(MONTH(d.`Data`),"/", YEAR(d.`Data`)) "Período", SUM(p.Valor) "Valor Total (R$)" FROM pagamentos p
 	INNER JOIN doacoes d ON d.ID = p.Doacoes_ID
 	INNER JOIN usuarios u ON u.CPF = d.Usuarios_CPF
@@ -21,30 +21,30 @@ SELECT CONCAT(MONTH(d.`Data`),"/", YEAR(d.`Data`)) "Período", SUM(p.Valor) "Val
 			ORDER BY p.`DataPagamento` ASC;
 
 
--- Query 4: LISTA DE TODAS AS PESSOAS QUE TEM MAIS DE UM CARTÃO DE CRÉDITO SALVO NA CONTA, TRAZENDO OS NÚMEROS E O NOME DA PESSOA ORDENADO POR NOME
+-- Query 4: Lista de todas as pessoas que possuem mais de um cartão de crédito salvo.
 SELECT ucc.CartaoDeCredito_Numero "Cartão de crédito", u.Nome FROM usuarios_cartaodecredito ucc
 	INNER JOIN usuarios u ON u.CPF = ucc.Usuarios_CPF
 		GROUP BY CartaoDeCredito_Numero 
 			HAVING count(CartaoDeCredito_Numero) > 1;
 
--- Query 5: mostrar a quantidade de cartões registrados para cada bandeira
+-- Query 5: Lista a quantidade de cartões registrados para cada bandeira
 SELECT count(Bandeira) "Quantidade de cartões", Bandeira FROM cartaodecredito
 	GROUP BY Bandeira
 		ORDER BY count(Bandeira) DESC;
 
--- Query 6: trazer todos os posts, e o nome do adm que fez, ordenado por data
+-- Query 6: Lista de todas as publicações e o nome do adm que fez.
 SELECT u.Nome "Responsável", pub.Legenda, pub.Imagem, pub.`Data` FROM publicacoes pub
 	INNER JOIN administradores adm ON adm.Usuario_CPF = pub.Administradores_Usuario_CPF
     INNER JOIN usuarios u ON u.CPF = pub.Administradores_Usuario_CPF
 		ORDER BY pub.`Data` DESC, u.Nome ASC;
 
--- Query 7: Lista de todas as pessoas que possuem cartão de crédito salvo, trazendo o nome completo, email, o número do cartão e o titular do cartão
+-- Query 7: Lista de todas as pessoas que possuem cartão de crédito salvo
 SELECT u.NomeCompleto, u.Email, cc.Numero "Número do Cartão", cc.NomeTitular "Titular do cartão" FROM usuarios_cartaodecredito ucc
 	INNER JOIN cartaodecredito cc ON cc.Numero = ucc.CartaoDeCredito_Numero
     LEFT JOIN usuarios u on u.CPF = ucc.Usuarios_CPF
         ORDER BY Nome;
         
--- Query 8: TRAGA TODOS OS CARTÕES ONDE OS USUÁRIOS SÃO OS TITULARES DO CARTÃO
+-- Query 8: Lista de cartões onde os usuários são os titulares.
 SELECT u.Nome, u.Email, cc.Numero "Número do Cartão", cc.NomeTitular "Titular do cartão" FROM usuarios_cartaodecredito ucc
 	INNER JOIN cartaodecredito cc ON cc.Numero = ucc.CartaoDeCredito_Numero
     INNER JOIN usuarios u on u.CPF = ucc.Usuarios_CPF
@@ -91,18 +91,18 @@ SELECT d.Usuarios_CPF "CPF", u.NomeCompleto "Nome Completo", d.`Data`, p.Valor, 
 
 -- Query 14: Lista de doações realizadas por administradores
 SELECT u.CPF, u.NomeCompleto, DATE_FORMAT(d.`Data`, "%Y-%m-%d") "Data", p.Valor, p.Tipo FROM usuarios u 
-INNER JOIN administradores adm ON adm.Usuario_CPF = u.CPF
-INNER JOIN doacoes d ON d.Usuarios_CPF = adm.Usuario_CPF
-INNER JOIN pagamentos p ON p.Doacoes_ID = d.ID;
+	INNER JOIN administradores adm ON adm.Usuario_CPF = u.CPF
+	INNER JOIN doacoes d ON d.Usuarios_CPF = adm.Usuario_CPF
+	INNER JOIN pagamentos p ON p.Doacoes_ID = d.ID
+		ORDER BY u.Nome;
 
 -- Query 15: Doação de maior valor, trazendo os dados de contato do usuário
---  Trazer quantos por cento do valor total das doações corresponde a doação de maior valor
 SELECT p.Valor, u.NomeCompleto "Nome Completo", u.Email, u.Telefone FROM usuarios u
 	INNER JOIN doacoes d ON u.CPF = d.Usuarios_CPF
 	INNER JOIN pagamentos p ON p.Doacoes_ID = d.ID
 		WHERE p.Valor = (SELECT MAX(Valor) FROM pagamentos);
 
--- Query 16: Para cada pessoa que realizou pelo menos uma doação, retornar Valor total doado e o  percentual de participação no total de doações
+-- Query 16: Para cada pessoa que realizou pelo menos uma doação, listar o valor total doado e o percentual de participação no total de doações
 SELECT u.CPF, u.NomeCompleto "Nome Completo", SUM(p.Valor) "Valor total doado",
 CONCAT(TRUNCATE( (SUM(valor) / (SELECT SUM(valor) FROM pagamentos) )*100, 1), "%") "Participação no valor total das doações" -- isso aqui tá uma bagunça, mas é para retornar o percentual de participação no valor total das doações
 FROM usuarios u
@@ -111,27 +111,27 @@ FROM usuarios u
 		GROUP BY u.CPF
         ORDER BY SUM(p.Valor) DESC;
 
--- Query 17: Retorne os cartões de créditos que vencem no próximo ano e o contato dos seus donos.
+-- Query 17: Listar os cartões de créditos que vencem no próximo ano e o contato dos seus donos.
 SELECT u.Nome, u.Email, cc.AnoMesVencimento, SUBSTRING(cc.Numero, -4) "Últimos dígitos do cartão", cc.Bandeira FROM usuarios_cartaodecredito ucc
 	INNER JOIN cartaodecredito cc ON cc.Numero = ucc.CartaoDeCredito_Numero
     INNER JOIN usuarios u ON u.CPF = ucc.Usuarios_CPF
 		WHERE YEAR(cc.DataVencimento) - YEAR(NOW()) <= 1;
 
--- Query 18: Retornar a quantidade de doações que cada usuário realizou, independente do valor
+-- Query 18: Listar a quantidade de doações que cada usuário realizou, independente do valor
 SELECT u.NomeCompleto "Nome Completo", COUNT(u.CPF) "Doações Realizadas", u.Email, u.Telefone FROM pagamentos p
 	INNER JOIN doacoes d ON d.ID = p.Doacoes_ID
     INNER JOIN usuarios u ON u.CPF = d.Usuarios_CPF
 		GROUP BY u.CPF
 			ORDER BY COUNT(u.CPF) DESC;
 
--- Query 19: Trazer todas as publicações que foram postadas no mês de DEZEMBRO
+-- Query 19: Listar todas as publicações que foram postadas no mês de DEZEMBRO
 SELECT u.Nome "Responsável", pub.Legenda, pub.Imagem, pub.`Data` FROM publicacoes pub
 	INNER JOIN administradores adm ON adm.Usuario_CPF = pub.Administradores_Usuario_CPF
     INNER JOIN usuarios u ON u.CPF = pub.Administradores_Usuario_CPF
 		WHERE MONTH(pub.`Data`) = 12
 			ORDER BY pub.`Data` DESC, u.Nome ASC;
             
--- Query 20: Trazer as doações em que o pagamento foi realizado em um dia diferente da doação (um exemplo seria pagamentos em boleto, onde você tem alguns dias para pagar)
+-- Query 20: Listar as doações em que o pagamento foi realizado em um dia diferente da doação (um exemplo seria pagamentos em boleto, onde você tem alguns dias para pagar)
 SELECT d.ID "Número Doação", u.NomeCompleto "Nome Completo", u.CPF, u.Email, d.`Data` "Data Doação", p.DataPagamento "Data Pagamento", TIMESTAMPDIFF(DAY, d.`Data`, p.DataPagamento) "Pagou após (dias)" FROM pagamentos p
 	INNER JOIN doacoes d ON d.ID = p.Doacoes_ID
 	INNER JOIN usuarios u ON u.CPF = d.Usuarios_CPF
