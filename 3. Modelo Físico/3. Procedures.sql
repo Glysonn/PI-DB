@@ -92,3 +92,14 @@ BEGIN
 			ORDER BY d.ID ASC, p.Valor DESC;
 END //
 DELIMITER ;
+
+-- 10
+DELIMITER //
+CREATE PROCEDURE RealizarPublicacao (IN ADM_CPF VARCHAR(14), IN Legenda TEXT, IN Arquivo VARCHAR(100))
+BEGIN
+	DECLARE Caminho VARCHAR(255);
+	SET Caminho = CONCAT((SELECT @@secure_file_priv), Arquivo);
+	INSERT INTO publicacoes (`ID`,`Administradores_Usuario_CPF`,`Data`,`Legenda`,`Imagem`)
+		VALUES (NULL, ADM_CPF, NULL, Legenda, LOAD_FILE(Caminho));
+END //
+DELIMITER ;
