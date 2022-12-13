@@ -68,3 +68,15 @@ BEGIN
 	UPDATE usuarios SET usuarios.senha = Senha WHERE usuarios.CPF = CPF;
 END // 
 DELIMITER ;
+
+-- 8
+DELIMITER //
+CREATE PROCEDURE DoacoesPorUsuario (IN CPF VARCHAR(14))
+BEGIN
+	SELECT u.NomeCompleto, p.Valor "Valor (R$)", p.DataPagamento, p.Tipo FROM pagamentos p
+	INNER JOIN doacoes d ON d.ID = p.Doacoes_ID
+	INNER JOIN usuarios u ON u.CPF = d.Usuarios_CPF
+		WHERE u.CPF = CPF
+			ORDER BY p.Valor DESC;
+END //
+DELIMITER ;
