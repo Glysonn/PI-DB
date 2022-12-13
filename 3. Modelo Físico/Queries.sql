@@ -33,7 +33,7 @@ SELECT count(Bandeira) "Quantidade de cartões", Bandeira FROM cartaodecredito
 		ORDER BY count(Bandeira) DESC;
 
 -- Query 6: trazer todos os posts, e o nome do adm que fez, ordenado por data
-SELECT u.Nome, pub.Legenda, pub.Imagem, pub.`Data` FROM publicacoes pub
+SELECT u.Nome "Responsável", pub.Legenda, pub.Imagem, pub.`Data` FROM publicacoes pub
 	INNER JOIN administradores adm ON adm.Usuario_CPF = pub.Administradores_Usuario_CPF
     INNER JOIN usuarios u ON u.CPF = pub.Administradores_Usuario_CPF
 		ORDER BY pub.`Data` DESC, u.Nome ASC;
@@ -124,4 +124,15 @@ SELECT u.NomeCompleto "Nome Completo", COUNT(u.CPF) "Doações Realizadas", u.Em
 		GROUP BY u.CPF
 			ORDER BY COUNT(u.CPF) DESC;
 
--- Query 19: 
+-- Query 19: Trazer todas as publicações que foram postadas no mês de DEZEMBRO
+SELECT u.Nome "Responsável", pub.Legenda, pub.Imagem, pub.`Data` FROM publicacoes pub
+	INNER JOIN administradores adm ON adm.Usuario_CPF = pub.Administradores_Usuario_CPF
+    INNER JOIN usuarios u ON u.CPF = pub.Administradores_Usuario_CPF
+		WHERE MONTH(pub.`Data`) = 12
+			ORDER BY pub.`Data` DESC, u.Nome ASC;
+            
+-- Query 20: Trazer as doações em que o pagamento foi realizado em um dia diferente da doação (um exemplo seria pagamentos em boleto, onde você tem alguns dias para pagar)
+SELECT d.ID "Número Doação", u.NomeCompleto "Nome Completo", u.CPF, u.Email, d.`Data` "Data Doação", p.DataPagamento "Data Pagamento", TIMESTAMPDIFF(DAY, d.`Data`, p.DataPagamento) "Pagou após (dias)" FROM pagamentos p
+	INNER JOIN doacoes d ON d.ID = p.Doacoes_ID
+	INNER JOIN usuarios u ON u.CPF = d.Usuarios_CPF
+		ORDER BY d.ID;
