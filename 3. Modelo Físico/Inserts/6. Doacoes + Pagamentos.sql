@@ -7,9 +7,16 @@ INSERT INTO pagamentos (`Doacoes_ID`,`Valor`,`DataPagamento`,`Tipo`,`Parcelas`) 
 INSERT INTO doacoes (`ID`,`Usuarios_CPF`,`Data`) VALUES (NULL,'309.608.974-45',NULL);
 INSERT INTO pagamentos (`Doacoes_ID`,`Valor`,`DataPagamento`,`Tipo`,`Parcelas`) VALUES (last_insert_id(),150,NULL,'Cartao',2);
 
+-- MANOEL GOMES -----------------
 INSERT INTO doacoes (`ID`,`Usuarios_CPF`,`Data`) VALUES (NULL,'411.800.454-24',NULL);
 INSERT INTO pagamentos (`Doacoes_ID`,`Valor`,`DataPagamento`,`Tipo`,`Parcelas`) VALUES (last_insert_id(),1200,NULL,'Cartao',3);
 
+INSERT INTO doacoes (`ID`,`Usuarios_CPF`,`Data`) VALUES (NULL,'411.800.454-24',NULL);
+INSERT INTO pagamentos (`Doacoes_ID`,`Valor`,`DataPagamento`,`Tipo`,`Parcelas`) VALUES (last_insert_id(),150,NULL,'Pix', NULL);
+
+INSERT INTO doacoes (`ID`,`Usuarios_CPF`,`Data`) VALUES (NULL,'411.800.454-24',NULL);
+INSERT INTO pagamentos (`Doacoes_ID`,`Valor`,`DataPagamento`,`Tipo`,`Parcelas`) VALUES (last_insert_id(),552,NULL,'Boleto', NULL);
+-- --------------------
 INSERT INTO doacoes (`ID`,`Usuarios_CPF`,`Data`) VALUES (NULL,'198.118.514-33',NULL);
 INSERT INTO pagamentos (`Doacoes_ID`,`Valor`,`DataPagamento`,`Tipo`,`Parcelas`) VALUES (last_insert_id(),50,NULL,'Cartao',1);
 
