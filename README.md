@@ -25,5 +25,5 @@
  - [ ] Deletar ou atualizar (**DML**) os dados das tabelas. **(no mínimo 10);**
  - [ ] Relatórios (**DQL**). Obrigatório uso de Join e Subselect na maioria e descrever as consultas. **(no mínimo 20);**
  - [ ] Views (**DDL**) dos principais relatórios do seu projeto. **(no mínimo 10);**
- - [ ] Criar e executar as Stored Procedures e Stored Functions do banco de dados. **(no mínimo 10);**
+ - [x] Criar e executar as Stored Procedures e Stored Functions do banco de dados. **(no mínimo 10);**
  - [x] Criar e executar os Stored Triggers do banco de dados. **(no mínimo 6);**
