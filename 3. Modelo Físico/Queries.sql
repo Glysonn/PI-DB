@@ -110,3 +110,18 @@ FROM usuarios u
 	INNER JOIN pagamentos p ON p.Doacoes_ID = d.ID
 		GROUP BY u.CPF
         ORDER BY SUM(p.Valor) DESC;
+
+-- Query 17: Retorne os cartões de créditos que vencem no próximo ano e o contato dos seus donos.
+SELECT u.Nome, u.Email, cc.AnoMesVencimento, SUBSTRING(cc.Numero, -4) "Últimos dígitos do cartão", cc.Bandeira FROM usuarios_cartaodecredito ucc
+	INNER JOIN cartaodecredito cc ON cc.Numero = ucc.CartaoDeCredito_Numero
+    INNER JOIN usuarios u ON u.CPF = ucc.Usuarios_CPF
+		WHERE YEAR(cc.DataVencimento) - YEAR(NOW()) <= 1;
+
+-- Query 18: Retornar a quantidade de doações que cada usuário realizou, independente do valor
+SELECT u.NomeCompleto "Nome Completo", COUNT(u.CPF) "Doações Realizadas", u.Email, u.Telefone FROM pagamentos p
+	INNER JOIN doacoes d ON d.ID = p.Doacoes_ID
+    INNER JOIN usuarios u ON u.CPF = d.Usuarios_CPF
+		GROUP BY u.CPF
+			ORDER BY COUNT(u.CPF) DESC;
+
+-- Query 19: 
