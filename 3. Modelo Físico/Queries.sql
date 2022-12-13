@@ -56,7 +56,7 @@ SELECT u.Nome, u.Email, cc.Numero "Número do Cartão", cc.NomeTitular "Titular 
 SELECT u.NomeCompleto, p.Valor "Valor (R$)", p.DataPagamento, p.Tipo FROM pagamentos p
 	INNER JOIN doacoes d ON d.ID = p.Doacoes_ID
 	INNER JOIN usuarios u ON u.CPF = d.Usuarios_CPF
-		WHERE u.CPF = "411.800.454-24"
+		WHERE u.CPF = "411.800.454-24" -- usando um CPF qualquer de exemplo (também existe uma procedure que faz isso recebendo o cpf por parâmetro)
 			ORDER BY p.Valor DESC;
 
 -- Query 10: Lista de todas as pessoas que NÃO possuem NENHUM cartão de crédito salvo, trazendo o CPF, nome completo, email e o telefone
@@ -82,4 +82,31 @@ FROM doacoes d
         GROUP BY u.CPF HAVING (SELECT SUM(VALOR)) < (SELECT AVG(Valor) FROM pagamentos)
 			ORDER BY u.NomeCompleto ASC, p.Valor;
             
--- Query 13: 
+-- Query 13: Lista de pagamentos do tipo cartão que foram feitas com pelo menos 2 parcelas
+SELECT d.Usuarios_CPF "CPF", u.NomeCompleto "Nome Completo", d.`Data`, p.Valor, p.Tipo, p.Parcelas FROM doacoes d
+	INNER JOIN pagamentos p ON p.Doacoes_ID = d.ID
+	INNER JOIN usuarios u ON u.CPF = d.Usuarios_CPF
+		WHERE p.Tipo LIKE "Cart%o" AND p.Parcelas >= 2
+        ORDER BY p.Parcelas DESC;
+
+-- Query 14: Lista de doações realizadas por administradores
+SELECT u.CPF, u.NomeCompleto, DATE_FORMAT(d.`Data`, "%Y-%m-%d") "Data", p.Valor, p.Tipo FROM usuarios u 
+INNER JOIN administradores adm ON adm.Usuario_CPF = u.CPF
+INNER JOIN doacoes d ON d.Usuarios_CPF = adm.Usuario_CPF
+INNER JOIN pagamentos p ON p.Doacoes_ID = d.ID;
+
+-- Query 15: Doação de maior valor, trazendo os dados de contato do usuário
+--  Trazer quantos por cento do valor total das doações corresponde a doação de maior valor
+SELECT p.Valor, u.NomeCompleto "Nome Completo", u.Email, u.Telefone FROM usuarios u
+	INNER JOIN doacoes d ON u.CPF = d.Usuarios_CPF
+	INNER JOIN pagamentos p ON p.Doacoes_ID = d.ID
+		WHERE p.Valor = (SELECT MAX(Valor) FROM pagamentos);
+
+-- Query 16: Para cada pessoa que realizou pelo menos uma doação, retornar Valor total doado e o  percentual de participação no total de doações
+SELECT u.CPF, u.NomeCompleto "Nome Completo", SUM(p.Valor) "Valor total doado",
+CONCAT(TRUNCATE( (SUM(valor) / (SELECT SUM(valor) FROM pagamentos) )*100, 1), "%") "Participação no valor total das doações" -- isso aqui tá uma bagunça, mas é para retornar o percentual de participação no valor total das doações
+FROM usuarios u
+	INNER JOIN doacoes d ON u.CPF = d.Usuarios_CPF
+	INNER JOIN pagamentos p ON p.Doacoes_ID = d.ID
+		GROUP BY u.CPF
+        ORDER BY SUM(p.Valor) DESC;
