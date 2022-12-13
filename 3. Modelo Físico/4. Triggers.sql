@@ -9,7 +9,7 @@ END //
 DELIMITER ;
 
 -- TRIGGER 2
--- Salva o mês e ano da data de vencimento
+-- Salva o mês e ano da data de vencimento em uma tabela separada 
 DELIMITER //
 CREATE TRIGGER tgr_cartaodecredito_Insert_Bf BEFORE INSERT ON cartaodecredito
 FOR EACH ROW
@@ -19,7 +19,7 @@ END //
 DELIMITER ;
 
 -- TRIGGER 3
--- Insere a hora atual no campo "Data" automaticamente
+-- Insere a hora atual no campo "Data" automaticamente quando é feita uma doação
 DELIMITER //
 CREATE TRIGGER tgr_doacoes_Insert_Bf BEFORE INSERT ON doacoes
 FOR EACH ROW
@@ -30,7 +30,7 @@ DELIMITER ;
 
 
 -- TRIGGER 4
--- Insere a hora atual no campo "DataPagamento" automaticamente
+-- Insere a hora atual no campo "DataPagamento" automaticamente quando um pagamento é feito
 DELIMITER //
 CREATE TRIGGER tgr_pagamentos_Insert_Bf BEFORE INSERT ON pagamentos
 FOR EACH ROW
@@ -41,7 +41,7 @@ DELIMITER ;
 
 
 -- TRIGGER 5
--- Insere a Bandeira do cartão de acordo com o seu número
+-- Insere a Bandeira do cartão de acordo com o seu número automaticamente quando um cartão é cadastrado
 DELIMITER //
 CREATE TRIGGER tgr_Numerocartaodecredito_Insert_Bf BEFORE INSERT ON cartaodecredito
 FOR EACH ROW
@@ -51,7 +51,7 @@ END //
 DELIMITER ;
 
 -- TRIGGER 6
--- Insere a hora atual no campo "Data" da tabela publicacoes
+-- Insere a hora atual no campo "Data" da tabela publicacoes automaticamente quando é feita uma publicação
 DELIMITER //
 CREATE TRIGGER tgr_publicacoes_Insert_Bf BEFORE INSERT ON publicacoes
 FOR EACH ROW
