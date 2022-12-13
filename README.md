@@ -22,7 +22,7 @@
  - [x] Alterar (**DDL**) as estruturas das tabelas **(no mínimo 5);**
  - [x] Destruir (**DDL**) todas as tabelas, Views, Stored Procedures, Stored Functions e dependências do seu banco de dados;
  - [x] Inserts (**DML**) nas tabelas do banco de dados **(no mínimo 10 registros/tabela);**
- - [ ] Deletar ou atualizar (**DML**) os dados das tabelas. **(no mínimo 10);**
+ - [x] Deletar ou atualizar (**DML**) os dados das tabelas. **(no mínimo 10);**
  - [ ] Relatórios (**DQL**). Obrigatório uso de Join e Subselect na maioria e descrever as consultas. **(no mínimo 20);**
  - [ ] Views (**DDL**) dos principais relatórios do seu projeto. **(no mínimo 10);**
  - [x] Criar e executar as Stored Procedures e Stored Functions do banco de dados. **(no mínimo 10);**
