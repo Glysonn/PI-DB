@@ -3,7 +3,7 @@ SELECT u.Nome, p.Valor, p.DataPagamento, p.Tipo FROM pagamentos p
 	INNER JOIN doacoes d ON d.ID = p.Doacoes_ID
 	INNER JOIN usuarios u ON u.CPF = d.Usuarios_CPF
 		ORDER BY p.Valor DESC;
-        
+
 -- Query 2: LISTA DE TODAS AS PESSOAS QUE TEM MAIS DE UM CARTÃO DE CRÉDITO SALVO NA CONTA, TRAZENDO OS NÚMEROS E O NOME DA PESSOA ORDENADO POR NOME
 SELECT ucc.CartaoDeCredito_Numero "Cartão de crédito", u.Nome FROM usuarios_cartaodecredito ucc
 	INNER JOIN usuarios u ON u.CPF = ucc.Usuarios_CPF
@@ -19,12 +19,12 @@ SELECT count(Bandeira) "Quantidade de cartões", Bandeira FROM cartaodecredito
 SELECT u.Nome, pub.Legenda, pub.Imagem, pub.`Data` FROM publicacoes pub
 	INNER JOIN administradores adm ON adm.Usuario_CPF = pub.Administradores_Usuario_CPF
     INNER JOIN usuarios u ON u.CPF = pub.Administradores_Usuario_CPF
-		ORDER BY pub.`Data`, u.Nome;
+		ORDER BY pub.`Data` DESC, u.Nome ASC;
 
 -- Query 5: Lista de todas as pessoas que possuem cartão de crédito salvo, trazendo o nome completo, email, o número do cartão e o titular do cartão
 SELECT u.NomeCompleto, u.Email, cc.Numero "Número do Cartão", cc.NomeTitular "Titular do cartão" FROM usuarios_cartaodecredito ucc
 	INNER JOIN cartaodecredito cc ON cc.Numero = ucc.CartaoDeCredito_Numero
-    INNER JOIN usuarios u on u.CPF = ucc.Usuarios_CPF
+    LEFT JOIN usuarios u on u.CPF = ucc.Usuarios_CPF
         ORDER BY Nome;
         
 -- Query 6: TRAGA TODOS OS CARTÕES ONDE OS USUÁRIOS SÃO OS TITULARES DO CARTÃO
@@ -33,6 +33,18 @@ SELECT u.Nome, u.Email, cc.Numero "Número do Cartão", cc.NomeTitular "Titular 
     INNER JOIN usuarios u on u.CPF = ucc.Usuarios_CPF
 		WHERE SUBSTRING_INDEX( u.NomeCompleto, ' ', 1 ) = SUBSTRING_INDEX( cc.NomeTitular, ' ', 1 )
 		AND SUBSTRING_INDEX( u.NomeCompleto, ' ', -1 ) = SUBSTRING_INDEX( cc.NomeTitular, ' ', -1 )
-        ORDER BY Nome;
+			ORDER BY Nome;
 
--- Query 7
+-- Query 7: Todas as doações que foram feitas a partir do cpf da pessoa, do nome e a data que foi feita
+SELECT u.NomeCompleto, p.Valor "Valor (R$)", p.DataPagamento, p.Tipo FROM pagamentos p
+	INNER JOIN doacoes d ON d.ID = p.Doacoes_ID
+	INNER JOIN usuarios u ON u.CPF = d.Usuarios_CPF
+		WHERE u.CPF = "411.800.454-24"
+			ORDER BY p.Valor DESC;
+
+-- Query 8: Lista de todas as pessoas que NÃO possuem NENHUM cartão de crédito salvo, trazendo o CPF, nome completo, email e o telefone
+SELECT u.CPF, u.NomeCompleto "Nome Completo", u.Email, u.Telefone FROM usuarios_cartaodecredito ucc
+	INNER JOIN cartaodecredito cc ON cc.Numero = ucc.CartaoDeCredito_Numero
+    RIGHT JOIN usuarios u on u.CPF = ucc.Usuarios_CPF
+		WHERE cc.Numero IS NULL
+			ORDER BY Nome;
