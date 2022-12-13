@@ -73,10 +73,22 @@ DELIMITER ;
 DELIMITER //
 CREATE PROCEDURE DoacoesPorUsuario (IN CPF VARCHAR(14))
 BEGIN
-	SELECT u.NomeCompleto, p.Valor "Valor (R$)", p.DataPagamento, p.Tipo FROM pagamentos p
+	SELECT u.NomeCompleto, u.Email, u.Telefone, p.Valor "Valor (R$)", d.ID "Doação", p.DataPagamento, p.Tipo FROM pagamentos p
 	INNER JOIN doacoes d ON d.ID = p.Doacoes_ID
 	INNER JOIN usuarios u ON u.CPF = d.Usuarios_CPF
 		WHERE u.CPF = CPF
-			ORDER BY p.Valor DESC;
+			ORDER BY d.ID ASC, p.Valor DESC;
+END //
+DELIMITER ;
+
+-- 9
+DELIMITER //
+CREATE PROCEDURE UsuariosPorDoacoes (IN ID_Doacao INT)
+BEGIN
+	SELECT d.ID "Doação",  p.Valor "Valor (R$)", SUBSTRING(d.`Data`, 1, 10) "Data", u.NomeCompleto "Nome completo", u.Email, u.Telefone FROM pagamentos p
+	INNER JOIN doacoes d ON d.ID = p.Doacoes_ID
+	INNER JOIN usuarios u ON u.CPF = d.Usuarios_CPF
+		WHERE d.ID = ID_Doacao
+			ORDER BY d.ID ASC, p.Valor DESC;
 END //
 DELIMITER ;
