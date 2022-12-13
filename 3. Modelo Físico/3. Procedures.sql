@@ -50,4 +50,21 @@ BEGIN
 END // 
 DELIMITER ;
 
--- 
+-- 6
+DELIMITER //
+CREATE PROCEDURE VerDoacoesPorTipo (IN Tipo ENUM('Cartao', 'Pix', 'Boleto'))
+BEGIN
+	SELECT u.Nome, p.Valor, p.DataPagamento, p.Tipo FROM pagamentos p
+	INNER JOIN doacoes d ON d.ID = p.Doacoes_ID
+	INNER JOIN usuarios u ON u.CPF = d.Usuarios_CPF
+    WHERE p.Tipo = Tipo;
+END // 
+DELIMITER ;
+
+-- 7
+DELIMITER //
+CREATE PROCEDURE AlterarSenhaUsuario (IN CPF VARCHAR(14), IN Senha CHAR(87))
+BEGIN
+	UPDATE usuarios SET usuarios.senha = Senha WHERE usuarios.CPF = CPF;
+END // 
+DELIMITER ;
