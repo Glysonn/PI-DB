@@ -35,19 +35,19 @@ SELECT count(Bandeira) "Quantidade de cartões", Bandeira FROM cartaodecredito
 -- Query 6: Lista de todas as publicações e o nome do adm que fez.
 SELECT u.Nome "Responsável", pub.Legenda, pub.Imagem, pub.`Data` FROM publicacoes pub
 	INNER JOIN administradores adm ON adm.Usuario_CPF = pub.Administradores_Usuario_CPF
-    INNER JOIN usuarios u ON u.CPF = pub.Administradores_Usuario_CPF
+    	INNER JOIN usuarios u ON u.CPF = pub.Administradores_Usuario_CPF
 		ORDER BY pub.`Data` DESC, u.Nome ASC;
 
 -- Query 7: Lista de todas as pessoas que possuem cartão de crédito salvo
 SELECT u.NomeCompleto, u.Email, cc.Numero "Número do Cartão", cc.NomeTitular "Titular do cartão" FROM usuarios_cartaodecredito ucc
 	INNER JOIN cartaodecredito cc ON cc.Numero = ucc.CartaoDeCredito_Numero
-    LEFT JOIN usuarios u on u.CPF = ucc.Usuarios_CPF
+    	LEFT JOIN usuarios u on u.CPF = ucc.Usuarios_CPF
         ORDER BY Nome;
         
 -- Query 8: Lista de cartões onde os usuários são os titulares.
 SELECT u.Nome, u.Email, cc.Numero "Número do Cartão", cc.NomeTitular "Titular do cartão" FROM usuarios_cartaodecredito ucc
 	INNER JOIN cartaodecredito cc ON cc.Numero = ucc.CartaoDeCredito_Numero
-    INNER JOIN usuarios u on u.CPF = ucc.Usuarios_CPF
+    	INNER JOIN usuarios u on u.CPF = ucc.Usuarios_CPF
 		WHERE SUBSTRING_INDEX( u.NomeCompleto, ' ', 1 ) = SUBSTRING_INDEX( cc.NomeTitular, ' ', 1 )
 		AND SUBSTRING_INDEX( u.NomeCompleto, ' ', -1 ) = SUBSTRING_INDEX( cc.NomeTitular, ' ', -1 )
 			ORDER BY Nome;
@@ -62,7 +62,7 @@ SELECT u.NomeCompleto, p.Valor "Valor (R$)", p.DataPagamento, p.Tipo FROM pagame
 -- Query 10: Lista de todas as pessoas que NÃO possuem NENHUM cartão de crédito salvo, trazendo o CPF, nome completo, email e o telefone
 SELECT u.CPF, u.NomeCompleto "Nome Completo", u.Email, u.Telefone FROM usuarios_cartaodecredito ucc
 	INNER JOIN cartaodecredito cc ON cc.Numero = ucc.CartaoDeCredito_Numero
-    RIGHT JOIN usuarios u on u.CPF = ucc.Usuarios_CPF
+    	RIGHT JOIN usuarios u on u.CPF = ucc.Usuarios_CPF
 		WHERE cc.Numero IS NULL
 			ORDER BY Nome;
 
@@ -79,7 +79,7 @@ CASE WHEN p.Tipo = "Cartao" THEN p.Parcelas END "Parcelas"
 FROM doacoes d
 	INNER JOIN usuarios u ON u.CPF = d.Usuarios_CPF
 	INNER JOIN pagamentos p ON p.Doacoes_ID = d.ID
-        GROUP BY u.CPF HAVING (SELECT SUM(VALOR)) < (SELECT AVG(Valor) FROM pagamentos)
+        	GROUP BY u.CPF HAVING (SELECT SUM(VALOR)) < (SELECT AVG(Valor) FROM pagamentos)
 			ORDER BY u.NomeCompleto ASC, p.Valor;
             
 -- Query 13: Lista de pagamentos do tipo cartão que foram feitas com pelo menos 2 parcelas
@@ -87,7 +87,7 @@ SELECT d.Usuarios_CPF "CPF", u.NomeCompleto "Nome Completo", d.`Data`, p.Valor, 
 	INNER JOIN pagamentos p ON p.Doacoes_ID = d.ID
 	INNER JOIN usuarios u ON u.CPF = d.Usuarios_CPF
 		WHERE p.Tipo LIKE "Cart%o" AND p.Parcelas >= 2
-        ORDER BY p.Parcelas DESC;
+        		ORDER BY p.Parcelas DESC;
 
 -- Query 14: Lista de doações realizadas por administradores
 SELECT u.CPF, u.NomeCompleto, DATE_FORMAT(d.`Data`, "%Y-%m-%d") "Data", p.Valor, p.Tipo FROM usuarios u 
@@ -109,25 +109,25 @@ FROM usuarios u
 	INNER JOIN doacoes d ON u.CPF = d.Usuarios_CPF
 	INNER JOIN pagamentos p ON p.Doacoes_ID = d.ID
 		GROUP BY u.CPF
-        ORDER BY SUM(p.Valor) DESC;
+        		ORDER BY SUM(p.Valor) DESC;
 
 -- Query 17: Listar os cartões de créditos que vencem no próximo ano e o contato dos seus donos.
 SELECT u.Nome, u.Email, cc.AnoMesVencimento, SUBSTRING(cc.Numero, -4) "Últimos dígitos do cartão", cc.Bandeira FROM usuarios_cartaodecredito ucc
 	INNER JOIN cartaodecredito cc ON cc.Numero = ucc.CartaoDeCredito_Numero
-    INNER JOIN usuarios u ON u.CPF = ucc.Usuarios_CPF
+    	INNER JOIN usuarios u ON u.CPF = ucc.Usuarios_CPF
 		WHERE YEAR(cc.DataVencimento) - YEAR(NOW()) <= 1;
 
 -- Query 18: Listar a quantidade de doações que cada usuário realizou, independente do valor
 SELECT u.NomeCompleto "Nome Completo", COUNT(u.CPF) "Doações Realizadas", u.Email, u.Telefone FROM pagamentos p
 	INNER JOIN doacoes d ON d.ID = p.Doacoes_ID
-    INNER JOIN usuarios u ON u.CPF = d.Usuarios_CPF
+    	INNER JOIN usuarios u ON u.CPF = d.Usuarios_CPF
 		GROUP BY u.CPF
 			ORDER BY COUNT(u.CPF) DESC;
 
 -- Query 19: Listar todas as publicações que foram postadas no mês de DEZEMBRO
 SELECT u.Nome "Responsável", pub.Legenda, pub.Imagem, pub.`Data` FROM publicacoes pub
 	INNER JOIN administradores adm ON adm.Usuario_CPF = pub.Administradores_Usuario_CPF
-    INNER JOIN usuarios u ON u.CPF = pub.Administradores_Usuario_CPF
+    	INNER JOIN usuarios u ON u.CPF = pub.Administradores_Usuario_CPF
 		WHERE MONTH(pub.`Data`) = 12
 			ORDER BY pub.`Data` DESC, u.Nome ASC;
             
